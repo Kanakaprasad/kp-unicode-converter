@@ -8,25 +8,26 @@
 
 <link rel="icon" href="static/fav.png">
 
+<!-- Required files -->
 <script src="static/kn.js"></script>
 <script src="static/app.min.js"></script>
 
 <style>
 :root{
   --primary:#ff6a00;
+  --bg:#f4f6f9;        /* Light default */
+  --card:#ffffff;
+  --text:#111;
+  --muted:#555;
+  --border:#ddd;
+}
+
+.dark{
   --bg:#0f1115;
   --card:#1b1f27;
   --text:#f1f1f1;
   --muted:#9aa0a6;
   --border:#2a2e36;
-}
-
-.light{
-  --bg:#f4f6f9;
-  --card:#ffffff;
-  --text:#111;
-  --muted:#555;
-  --border:#ddd;
 }
 
 *{box-sizing:border-box}
@@ -39,6 +40,7 @@ html,body{
   color:var(--text);
 }
 
+/* Header */
 header{
   height:55px;
   display:flex;
@@ -56,6 +58,21 @@ header{
   color:var(--primary);
 }
 
+.header-controls{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+
+select{
+  padding:5px 8px;
+  border-radius:6px;
+  border:1px solid var(--border);
+  background:transparent;
+  color:var(--text);
+}
+
+/* Main */
 main{
   height:calc(100% - 55px);
   display:flex;
@@ -139,6 +156,7 @@ footer{
   color:var(--muted);
 }
 
+/* Responsive */
 @media(max-width:900px){
   .textareas{
     grid-template-columns:1fr;
@@ -151,20 +169,38 @@ footer{
 
 <header>
   <div class="brand">KP<span>Works</span> Converter</div>
-  <button onclick="toggleTheme()">🌗</button>
+  <div class="header-controls">
+    <select id="languageToggle" onchange="changeLanguage()">
+      <option value="en">English</option>
+      <option value="kn">ಕನ್ನಡ</option>
+    </select>
+    <button onclick="toggleTheme()">🌗</button>
+  </div>
 </header>
 
 <main>
   <div class="card">
 
     <div class="mode-row">
-      <label><input type="radio" name="mode" value="a2u" checked> ASCII → Unicode</label>
-      <label><input type="radio" name="mode" value="u2a"> Unicode → ASCII</label>
+      <label>
+        <input type="radio" name="mode" value="a2u" checked>
+        <span data-en="ASCII → Unicode" data-kn="ಆಸ್ಕಿ → ಯುನಿಕೋಡ್">ASCII → Unicode</span>
+      </label>
+
+      <label>
+        <input type="radio" name="mode" value="u2a">
+        <span data-en="Unicode → ASCII" data-kn="ಯುನಿಕೋಡ್ → ಆಸ್ಕಿ">Unicode → ASCII</span>
+      </label>
     </div>
 
     <div class="textareas">
-      <textarea id="inputText" placeholder="Paste text here..."></textarea>
-      <textarea id="outputText" placeholder="Converted output will appear here..." readonly></textarea>
+      <textarea id="inputText"
+        placeholder="Paste text here..."
+        oninput="convertText()"></textarea>
+
+      <textarea id="outputText"
+        placeholder="Converted output will appear here..."
+        readonly></textarea>
     </div>
 
     <div class="actions">
@@ -179,14 +215,17 @@ footer{
   Open-source core based on Sanka (GPL v3)
 </footer>
 
+<!-- Hidden Elm mount (required for converter to work) -->
+<div id="elmapp" style="display:none;"></div>
+
 <script>
 
-/* Initialize Elm (required for conversion to work) */
+/* Proper Elm Initialization */
 var app = Elm.Converter.init({
-  node: document.createElement("div")
+  node: document.getElementById("elmapp")
 });
 
-/* Conversion bridge */
+/* Receive converted text */
 app.ports.converted_text.subscribe(function(text){
   document.getElementById("outputText").value = text;
 });
@@ -204,7 +243,7 @@ function convertText(){
   });
 }
 
-document.getElementById("inputText").addEventListener("input", convertText);
+/* Reconvert when mode changes */
 document.querySelectorAll('input[name="mode"]').forEach(r=>{
   r.addEventListener("change", convertText);
 });
@@ -221,8 +260,17 @@ function clearText(){
   document.getElementById("outputText").value="";
 }
 
+/* Theme toggle */
 function toggleTheme(){
-  document.body.classList.toggle("light");
+  document.body.classList.toggle("dark");
+}
+
+/* Language toggle */
+function changeLanguage(){
+  const lang=document.getElementById("languageToggle").value;
+  document.querySelectorAll("[data-en]").forEach(el=>{
+    el.textContent=el.getAttribute("data-"+lang);
+  });
 }
 
 </script>

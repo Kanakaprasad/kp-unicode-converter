@@ -6,7 +6,10 @@
 
 <title>Kannada Unicode Converter | KPWorks</title>
 
-<script src="static/kn.js?v=2"></script>
+<link rel="icon" href="static/fav.png">
+
+<script src="static/kn.js"></script>
+<script src="static/app.min.js"></script>
 
 <style>
 :root{
@@ -26,20 +29,15 @@
   --border:#ddd;
 }
 
-*{
-  box-sizing:border-box;
-}
+*{box-sizing:border-box}
 
-html, body{
+html,body{
   margin:0;
-  padding:0;
   height:100%;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
   background:var(--bg);
   color:var(--text);
 }
-
-/* ===== HEADER ===== */
 
 header{
   height:55px;
@@ -52,28 +50,11 @@ header{
 
 .brand{
   font-weight:600;
-  font-size:16px;
 }
 
 .brand span{
   color:var(--primary);
 }
-
-.header-controls{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-select{
-  padding:5px 8px;
-  border-radius:6px;
-  border:1px solid var(--border);
-  background:transparent;
-  color:var(--text);
-}
-
-/* ===== MAIN ===== */
 
 main{
   height:calc(100% - 55px);
@@ -96,20 +77,12 @@ main{
   flex-direction:column;
 }
 
-/* Mode Row */
-
 .mode-row{
   display:flex;
   gap:20px;
   font-size:14px;
   margin-bottom:12px;
 }
-
-.mode-row label{
-  cursor:pointer;
-}
-
-/* Text Areas */
 
 .textareas{
   flex:1;
@@ -135,8 +108,6 @@ textarea:focus{
   border-color:var(--primary);
 }
 
-/* Actions */
-
 .actions{
   display:flex;
   justify-content:flex-end;
@@ -149,7 +120,6 @@ button{
   border:none;
   border-radius:8px;
   cursor:pointer;
-  font-weight:500;
 }
 
 .primary{
@@ -169,8 +139,6 @@ footer{
   color:var(--muted);
 }
 
-/* Responsive */
-
 @media(max-width:900px){
   .textareas{
     grid-template-columns:1fr;
@@ -183,38 +151,20 @@ footer{
 
 <header>
   <div class="brand">KP<span>Works</span> Converter</div>
-  <div class="header-controls">
-    <select id="languageToggle" onchange="changeLanguage()">
-      <option value="en">English</option>
-      <option value="kn">ಕನ್ನಡ</option>
-    </select>
-    <button onclick="toggleTheme()">🌗</button>
-  </div>
+  <button onclick="toggleTheme()">🌗</button>
 </header>
 
 <main>
   <div class="card">
 
     <div class="mode-row">
-      <label>
-        <input type="radio" name="mode" value="a2u" checked>
-        <span data-en="ASCII → Unicode" data-kn="ಆಸ್ಕಿ → ಯುನಿಕೋಡ್">ASCII → Unicode</span>
-      </label>
-
-      <label>
-        <input type="radio" name="mode" value="u2a">
-        <span data-en="Unicode → ASCII" data-kn="ಯುನಿಕೋಡ್ → ಆಸ್ಕಿ">Unicode → ASCII</span>
-      </label>
+      <label><input type="radio" name="mode" value="a2u" checked> ASCII → Unicode</label>
+      <label><input type="radio" name="mode" value="u2a"> Unicode → ASCII</label>
     </div>
 
     <div class="textareas">
-      <textarea id="inputText"
-        placeholder="Paste text here..."
-        oninput="convertText()"></textarea>
-
-      <textarea id="outputText"
-        placeholder="Converted output will appear here..."
-        readonly></textarea>
+      <textarea id="inputText" placeholder="Paste text here..."></textarea>
+      <textarea id="outputText" placeholder="Converted output will appear here..." readonly></textarea>
     </div>
 
     <div class="actions">
@@ -231,37 +181,35 @@ footer{
 
 <script>
 
-/* ===== LIVE CONVERSION ===== */
+/* Initialize Elm (required for conversion to work) */
+var app = Elm.Converter.init({
+  node: document.createElement("div")
+});
 
+/* Conversion bridge */
+app.ports.converted_text.subscribe(function(text){
+  document.getElementById("outputText").value = text;
+});
+
+/* Live conversion */
 function convertText(){
   const input = document.getElementById("inputText").value;
   const mode = document.querySelector('input[name="mode"]:checked').value;
 
-  if(!input){
-    document.getElementById("outputText").value="";
-    return;
-  }
-
-  try{
-    let output;
-    if(mode==="a2u"){
-      output = kn.ascii_to_unicode(input,false,false);
-    }else{
-      output = kn.unicode_to_ascii(input,false,false);
-    }
-    document.getElementById("outputText").value = output;
-  }catch(e){
-    document.getElementById("outputText").value="Conversion error.";
-  }
+  app.ports.convert.send({
+    input: input,
+    a2u: mode === "a2u",
+    englishNumbers: false,
+    removeExtraSpaces: false
+  });
 }
 
-/* Reconvert when mode changes */
+document.getElementById("inputText").addEventListener("input", convertText);
 document.querySelectorAll('input[name="mode"]').forEach(r=>{
   r.addEventListener("change", convertText);
 });
 
-/* ===== UTILITIES ===== */
-
+/* Utilities */
 function copyOutput(){
   const output=document.getElementById("outputText");
   output.select();
@@ -273,19 +221,8 @@ function clearText(){
   document.getElementById("outputText").value="";
 }
 
-/* ===== THEME ===== */
-
 function toggleTheme(){
   document.body.classList.toggle("light");
-}
-
-/* ===== LANGUAGE ===== */
-
-function changeLanguage(){
-  const lang=document.getElementById("languageToggle").value;
-  document.querySelectorAll("[data-en]").forEach(el=>{
-    el.textContent=el.getAttribute("data-"+lang);
-  });
 }
 
 </script>

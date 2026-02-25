@@ -6,19 +6,14 @@
 
 <title>Kannada Unicode Converter | KPWorks</title>
 
-<link rel="icon" href="static/fav.png">
-
-<!-- Required files -->
 <script src="static/kn.js"></script>
-<script src="static/app.min.js"></script>
 
 <style>
 :root{
   --primary:#ff6a00;
-  --bg:#f4f6f9;        /* Light default */
+  --bg:#f4f6f9;
   --card:#ffffff;
   --text:#111;
-  --muted:#555;
   --border:#ddd;
 }
 
@@ -26,7 +21,6 @@
   --bg:#0f1115;
   --card:#1b1f27;
   --text:#f1f1f1;
-  --muted:#9aa0a6;
   --border:#2a2e36;
 }
 
@@ -40,7 +34,6 @@ html,body{
   color:var(--text);
 }
 
-/* Header */
 header{
   height:55px;
   display:flex;
@@ -50,29 +43,10 @@ header{
   border-bottom:1px solid var(--border);
 }
 
-.brand{
-  font-weight:600;
-}
-
 .brand span{
   color:var(--primary);
 }
 
-.header-controls{
-  display:flex;
-  gap:10px;
-  align-items:center;
-}
-
-select{
-  padding:5px 8px;
-  border-radius:6px;
-  border:1px solid var(--border);
-  background:transparent;
-  color:var(--text);
-}
-
-/* Main */
 main{
   height:calc(100% - 55px);
   display:flex;
@@ -97,7 +71,6 @@ main{
 .mode-row{
   display:flex;
   gap:20px;
-  font-size:14px;
   margin-bottom:12px;
 }
 
@@ -153,10 +126,9 @@ footer{
   font-size:11px;
   text-align:center;
   padding:6px;
-  color:var(--muted);
+  color:#777;
 }
 
-/* Responsive */
 @media(max-width:900px){
   .textareas{
     grid-template-columns:1fr;
@@ -169,11 +141,7 @@ footer{
 
 <header>
   <div class="brand">KP<span>Works</span> Converter</div>
-  <div class="header-controls">
-    <select id="languageToggle" onchange="changeLanguage()">
-      <option value="en">English</option>
-      <option value="kn">ಕನ್ನಡ</option>
-    </select>
+  <div>
     <button onclick="toggleTheme()">🌗</button>
   </div>
 </header>
@@ -182,15 +150,8 @@ footer{
   <div class="card">
 
     <div class="mode-row">
-      <label>
-        <input type="radio" name="mode" value="a2u" checked>
-        <span data-en="ASCII → Unicode" data-kn="ಆಸ್ಕಿ → ಯುನಿಕೋಡ್">ASCII → Unicode</span>
-      </label>
-
-      <label>
-        <input type="radio" name="mode" value="u2a">
-        <span data-en="Unicode → ASCII" data-kn="ಯುನಿಕೋಡ್ → ಆಸ್ಕಿ">Unicode → ASCII</span>
-      </label>
+      <label><input type="radio" name="mode" value="a2u" checked> ASCII → Unicode</label>
+      <label><input type="radio" name="mode" value="u2a"> Unicode → ASCII</label>
     </div>
 
     <div class="textareas">
@@ -215,44 +176,26 @@ footer{
   Open-source core based on Sanka (GPL v3)
 </footer>
 
-<!-- Hidden Elm mount (required for converter to work) -->
-<div id="elmapp" style="display:none;"></div>
-
 <script>
 
-/* Proper Elm Initialization */
-var app = Elm.Converter.init({
-  node: document.getElementById("elmapp")
-});
-
-/* Receive converted text */
-app.ports.converted_text.subscribe(function(text){
-  document.getElementById("outputText").value = text;
-});
-
-/* Live conversion */
 function convertText(){
   const input = document.getElementById("inputText").value;
   const mode = document.querySelector('input[name="mode"]:checked').value;
 
-  app.ports.convert.send({
-    input: input,
-    a2u: mode === "a2u",
-    englishNumbers: false,
-    removeExtraSpaces: false
-  });
-}
+  if(!input){
+    document.getElementById("outputText").value="";
+    return;
+  }
 
-/* Reconvert when mode changes */
-document.querySelectorAll('input[name="mode"]').forEach(r=>{
-  r.addEventListener("change", convertText);
-});
+  let output;
 
-/* Utilities */
-function copyOutput(){
-  const output=document.getElementById("outputText");
-  output.select();
-  document.execCommand("copy");
+  if(mode === "a2u"){
+    output = kn.ascii_to_unicode(input, false, false);
+  } else {
+    output = kn.unicode_to_ascii(input, false, false);
+  }
+
+  document.getElementById("outputText").value = output;
 }
 
 function clearText(){
@@ -260,17 +203,14 @@ function clearText(){
   document.getElementById("outputText").value="";
 }
 
-/* Theme toggle */
-function toggleTheme(){
-  document.body.classList.toggle("dark");
+function copyOutput(){
+  const output=document.getElementById("outputText");
+  output.select();
+  document.execCommand("copy");
 }
 
-/* Language toggle */
-function changeLanguage(){
-  const lang=document.getElementById("languageToggle").value;
-  document.querySelectorAll("[data-en]").forEach(el=>{
-    el.textContent=el.getAttribute("data-"+lang);
-  });
+function toggleTheme(){
+  document.body.classList.toggle("dark");
 }
 
 </script>

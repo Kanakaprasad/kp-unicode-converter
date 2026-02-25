@@ -1,160 +1,269 @@
 <!DOCTYPE html>
 <html lang="kn">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Kannada ASCII to Unicode Converter | KPWorks</title>
+<title>Kannada Unicode Converter | KPWorks</title>
 
-    <meta name="description" content="Free Kannada ASCII to Unicode converter for Nudi and Baraha. Convert legacy Kannada fonts to Unicode online instantly." />
-    <meta name="keywords" content="Kannada ASCII to Unicode, Nudi to Unicode, Baraha converter, Kannada font conversion, Kannada typing tool" />
+<meta name="description" content="Professional Kannada ASCII to Unicode Converter for Nudi and Baraha. Clean, fast and reliable.">
+<link rel="icon" href="static/fav.png">
 
-    <meta property="og:title" content="Kannada ASCII to Unicode Converter | KPWorks"/>
-    <meta property="og:description" content="Convert Nudi/Baraha ASCII Kannada text to Unicode and back. Free online tool."/>
-    <meta property="og:url" content="https://converter.kpworks.site/" />
-    <meta property="og:type" content="website" />
+<script src="static/kn.js?v=2"></script>
+<script src="static/app.min.js?v=2"></script>
 
-    <link rel="icon" href="static/fav.png" />
-    <link rel="apple-touch-icon" href="static/fav.png" />
+<style>
 
-    <link rel="stylesheet" href="static/app.css?v=3" />
+:root{
+  --primary:#ff6a00;
+  --bg:#0f1115;
+  --card:#1a1d23;
+  --text:#f1f1f1;
+  --muted:#9aa0a6;
+  --border:#2a2e36;
+}
 
-    <script src="static/kn.js?v=2"></script>
-    <script src="static/app.min.js?v=2"></script>
+*{box-sizing:border-box}
 
-    <style>
-        body {
-            margin: 0;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-            background: #111;
-            color: #222;
-        }
+body{
+  margin:0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: linear-gradient(135deg,#0f1115,#141822);
+  color:var(--text);
+}
 
-        .header {
-            background: #1f1f1f;
-            color: white;
-            text-align: center;
-            padding: 20px 10px;
-        }
+/* Top minimal bar */
 
-        .header h1 {
-            margin: 0;
-            font-size: 28px;
-            color: #ff7a00;
-        }
+.topbar{
+  padding:16px 24px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid var(--border);
+}
 
-        .header p {
-            margin: 5px 0 0;
-            font-size: 14px;
-            opacity: 0.8;
-        }
+.brand{
+  font-weight:600;
+  font-size:18px;
+  letter-spacing:.5px;
+}
 
-        .container {
-            max-width: 900px;
-            margin: 20px auto;
-            background: #f5d7a7;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-        }
+.brand span{
+  color:var(--primary);
+}
 
-        .footer {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 13px;
-            color: #aaa;
-        }
+.top-links{
+  font-size:14px;
+}
 
-        .footer a {
-            color: #ff7a00;
-            text-decoration: none;
-        }
+.top-links a{
+  color:var(--muted);
+  text-decoration:none;
+}
 
-        .action-buttons {
-            margin-top: 15px;
-            text-align: right;
-        }
+.top-links a:hover{
+  color:var(--primary);
+}
 
-        .action-buttons button {
-            background: #ff7a00;
-            border: none;
-            padding: 8px 14px;
-            margin-left: 5px;
-            border-radius: 5px;
-            color: white;
-            cursor: pointer;
-        }
+/* Main layout */
 
-        .action-buttons button:hover {
-            opacity: 0.9;
-        }
+.container{
+  max-width:1100px;
+  margin:40px auto;
+  padding:0 20px;
+}
 
-        @media(max-width: 768px){
-            .container {
-                margin: 10px;
-                padding: 15px;
-            }
-        }
-    </style>
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:24px;
+  box-shadow:0 10px 40px rgba(0,0,0,0.4);
+}
+
+/* Controls */
+
+.controls{
+  display:flex;
+  flex-wrap:wrap;
+  gap:15px;
+  margin-bottom:20px;
+  align-items:center;
+}
+
+.controls label{
+  font-size:14px;
+  color:var(--muted);
+}
+
+.controls input[type="radio"],
+.controls input[type="checkbox"]{
+  margin-right:6px;
+}
+
+/* Textarea layout */
+
+.textareas{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+}
+
+textarea{
+  width:100%;
+  min-height:220px;
+  resize:vertical;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:#0f1115;
+  color:#fff;
+  padding:15px;
+  font-size:15px;
+}
+
+textarea:focus{
+  outline:none;
+  border-color:var(--primary);
+}
+
+/* Action bar */
+
+.actions{
+  margin-top:20px;
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+}
+
+button{
+  background:var(--primary);
+  border:none;
+  color:white;
+  padding:10px 16px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:500;
+}
+
+button.secondary{
+  background:#2a2e36;
+  color:#ddd;
+}
+
+button:hover{
+  opacity:.9;
+}
+
+/* Footer */
+
+.footer{
+  margin-top:30px;
+  text-align:center;
+  font-size:13px;
+  color:var(--muted);
+}
+
+.footer a{
+  color:var(--primary);
+  text-decoration:none;
+}
+
+/* Responsive */
+
+@media(max-width:900px){
+  .textareas{
+    grid-template-columns:1fr;
+  }
+}
+
+</style>
 </head>
 
 <body>
 
-    <div class="header">
-        <h1>Kannada ASCII ↔ Unicode Converter</h1>
-        <p>Enhanced by <a href="https://www.kpworks.site" target="_blank" style="color:#ff7a00;">KPWorks</a> | Based on Sanka (GPL v3)</p>
+<div class="topbar">
+  <div class="brand">KP<span>Works</span> Converter</div>
+  <div class="top-links">
+    <a href="https://kpworks.site" target="_blank">Creator Vault</a>
+  </div>
+</div>
+
+<div class="container">
+  <div class="card">
+
+    <div class="controls">
+      <label>
+        <input type="radio" name="mode" value="a2u" checked>
+        ASCII → Unicode
+      </label>
+
+      <label>
+        <input type="radio" name="mode" value="u2a">
+        Unicode → ASCII
+      </label>
+
+      <label>
+        <input type="checkbox" id="englishNumbers">
+        English Numbers
+      </label>
+
+      <label>
+        <input type="checkbox" id="removeSpaces">
+        Remove Extra Spaces
+      </label>
     </div>
 
-    <div class="container">
-
-        <div id="elmapp"></div>
-
-        <div class="action-buttons">
-            <button onclick="copyOutput()">Copy Output</button>
-            <button onclick="clearText()">Clear</button>
-        </div>
-
+    <div class="textareas">
+      <textarea id="inputText" placeholder="Paste your text here..."></textarea>
+      <textarea id="outputText" placeholder="Converted output will appear here..."></textarea>
     </div>
 
-    <div class="footer">
-        <p>
-            Original Project by <a href="https://aravindavk.in" target="_blank">Aravind V K</a> |
-            Licensed under GPL v3
-        </p>
-        <p>
-            Visit Creator Vault →
-            <a href="https://www.kpworks.site" target="_blank">kpworks.site</a>
-        </p>
+    <div class="actions">
+      <button class="secondary" onclick="clearText()">Clear</button>
+      <button onclick="convertText()">Convert</button>
+      <button onclick="copyOutput()">Copy</button>
     </div>
+
+  </div>
+
+  <div class="footer">
+    Based on Sanka (GPL v3) by Aravind V K |
+    Enhanced UI by KPWorks
+  </div>
+
+</div>
 
 <script>
-    var app = Elm.Converter.init({
-        node: document.getElementById('elmapp')
-    });
 
-    app.ports.convert.subscribe(function(args) {
-        let out;
-        if (args.a2u){
-            out = kn.ascii_to_unicode(args.input, args.englishNumbers, args.removeExtraSpaces);
-        } else {
-            out = kn.unicode_to_ascii(args.input, args.englishNumbers, args.removeExtraSpaces);
-        }
-        app.ports.converted_text.send(out);
-    });
+function convertText(){
+  const input = document.getElementById("inputText").value;
+  const englishNumbers = document.getElementById("englishNumbers").checked;
+  const removeSpaces = document.getElementById("removeSpaces").checked;
+  const mode = document.querySelector('input[name="mode"]:checked').value;
 
-    function copyOutput(){
-        const textareas = document.querySelectorAll("textarea");
-        if(textareas.length > 1){
-            textareas[1].select();
-            document.execCommand("copy");
-            alert("Copied to clipboard!");
-        }
-    }
+  let output;
 
-    function clearText(){
-        const textareas = document.querySelectorAll("textarea");
-        textareas.forEach(t => t.value = "");
-    }
+  if(mode === "a2u"){
+    output = kn.ascii_to_unicode(input, englishNumbers, removeSpaces);
+  }else{
+    output = kn.unicode_to_ascii(input, englishNumbers, removeSpaces);
+  }
+
+  document.getElementById("outputText").value = output;
+}
+
+function copyOutput(){
+  const output = document.getElementById("outputText");
+  output.select();
+  document.execCommand("copy");
+  alert("Copied to clipboard!");
+}
+
+function clearText(){
+  document.getElementById("inputText").value="";
+  document.getElementById("outputText").value="";
+}
+
 </script>
 
 </body>

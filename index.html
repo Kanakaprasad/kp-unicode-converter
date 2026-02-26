@@ -6,7 +6,11 @@
 
 <title>Kannada Unicode Converter | KPWorks</title>
 
+<link rel="icon" href="static/fav.png">
+
+<!-- Required by Sanka -->
 <script src="static/kn.js"></script>
+<script src="static/app.min.js"></script>
 
 <style>
 :root{
@@ -34,6 +38,7 @@ html,body{
   color:var(--text);
 }
 
+/* Header */
 header{
   height:55px;
   display:flex;
@@ -43,9 +48,7 @@ header{
   border-bottom:1px solid var(--border);
 }
 
-.brand span{
-  color:var(--primary);
-}
+.brand span{ color:var(--primary); }
 
 main{
   height:calc(100% - 55px);
@@ -141,9 +144,7 @@ footer{
 
 <header>
   <div class="brand">KP<span>Works</span> Converter</div>
-  <div>
-    <button onclick="toggleTheme()">🌗</button>
-  </div>
+  <button onclick="toggleTheme()">🌗</button>
 </header>
 
 <main>
@@ -155,13 +156,8 @@ footer{
     </div>
 
     <div class="textareas">
-      <textarea id="inputText"
-        placeholder="Paste text here..."
-        oninput="convertText()"></textarea>
-
-      <textarea id="outputText"
-        placeholder="Converted output will appear here..."
-        readonly></textarea>
+      <textarea id="inputText" placeholder="Paste text here..."></textarea>
+      <textarea id="outputText" placeholder="Converted output will appear here..." readonly></textarea>
     </div>
 
     <div class="actions">
@@ -176,27 +172,38 @@ footer{
   Open-source core based on Sanka (GPL v3)
 </footer>
 
+<!-- Hidden Elm Mount (DO NOT REMOVE) -->
+<div id="elmapp" style="display:none;"></div>
+
 <script>
 
+/* Proper Elm Initialization */
+var app = Elm.Converter.init({
+  node: document.getElementById("elmapp")
+});
+
+/* Listen for converted result */
+app.ports.converted_text.subscribe(function(text){
+  document.getElementById("outputText").value = text;
+});
+
+/* Live conversion */
 function convertText(){
   const input = document.getElementById("inputText").value;
   const mode = document.querySelector('input[name="mode"]:checked').value;
 
-  if(!input){
-    document.getElementById("outputText").value="";
-    return;
-  }
-
-  let output;
-
-  if(mode === "a2u"){
-    output = kn.ascii_to_unicode(input, false, false);
-  } else {
-    output = kn.unicode_to_ascii(input, false, false);
-  }
-
-  document.getElementById("outputText").value = output;
+  app.ports.convert.send({
+    input: input,
+    a2u: mode === "a2u",
+    englishNumbers: false,
+    removeExtraSpaces: false
+  });
 }
+
+document.getElementById("inputText").addEventListener("input", convertText);
+document.querySelectorAll('input[name="mode"]').forEach(r=>{
+  r.addEventListener("change", convertText);
+});
 
 function clearText(){
   document.getElementById("inputText").value="";

@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
         outputPanelTitle: document.getElementById('outputPanelTitle'),
         inputText: document.getElementById('inputText'),
         outputText: document.getElementById('outputText'),
+        btnPaste: document.getElementById('btnPaste'),
         btnClear: document.getElementById('btnClear'),
         btnCopy: document.getElementById('btnCopy'),
         inputStats: document.getElementById('inputStats'),
@@ -34,6 +35,8 @@ document.addEventListener('DOMContentLoaded', () => {
             outputU2ATitle: "Output (ASCII / Nudi / Baraha)",
             inputPlaceholder: "Type or paste your text here...",
             outputPlaceholder: "Converted text will appear here",
+            paste: "Paste",
+            pasted: "Pasted ✓",
             clear: "Clear",
             copy: "Copy",
             copied: "Copied ✓",
@@ -49,6 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
             outputU2ATitle: "ಔಟ್ಪುಟ್ (ಆಸ್ಕಿ / ನುಡಿ / ಬರಹ)",
             inputPlaceholder: "ಇಲ್ಲಿ ಬರೆಯಿರಿ ಅಥವಾ ಅಂಟಿಸಿ...",
             outputPlaceholder: "ಬದಲಾವಣೆಗೊಂಡ ಪಠ್ಯ ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತದೆ",
+            paste: "ಅಂಟಿಸಿ",
+            pasted: "ಅಂಟಿಸಲಾಗಿದೆ ✓",
             clear: "ತೆರವುಗೊಳಿಸಿ",
             copy: "ನಕಲಿಸಿ",
             copied: "ನಕಲಿಸಲಾಗಿದೆ ✓",
@@ -89,11 +94,14 @@ document.addEventListener('DOMContentLoaded', () => {
         // Update Buttons
         dom.btnA2U.textContent = t.modeA2U;
         dom.btnU2A.textContent = t.modeU2A;
-        dom.btnClear.innerHTML = `<svg class="icon"><path d="M18 6L6 18M6 6l12 12"></path></svg> ${t.clear}`;
         
-        // Ensure copy button text resets cleanly if it was mid-animation
+        document.getElementById('pasteBtnText').textContent = t.paste;
+        document.getElementById('clearBtnText').textContent = t.clear;
+        
+        // Ensure buttons text resets cleanly if it was mid-animation
         dom.btnCopy.classList.remove('btn-success');
-        dom.btnCopy.innerHTML = `<svg class="icon"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> ${t.copy}`;
+        document.getElementById('copyBtnText').textContent = t.copy;
+        dom.btnPaste.classList.remove('btn-success');
         
         // Update Titles & Placeholders based on Mode
         if (currentMode === 'a2u') {
@@ -174,6 +182,36 @@ document.addEventListener('DOMContentLoaded', () => {
     dom.inputText.addEventListener('input', triggerConversion);
 
     // --- Actions ---
+    dom.btnPaste.addEventListener('click', async () => {
+        try {
+            const text = await navigator.clipboard.readText();
+            if (text) {
+                // Insert text at cursor position or append
+                const start = dom.inputText.selectionStart;
+                const end = dom.inputText.selectionEnd;
+                const val = dom.inputText.value;
+                dom.inputText.value = val.substring(0, start) + text + val.substring(end);
+                dom.inputText.selectionStart = dom.inputText.selectionEnd = start + text.length;
+                
+                triggerConversion();
+                
+                // Visual feedback
+                const t = i18n[currentLang];
+                dom.btnPaste.classList.add('btn-success');
+                document.getElementById('pasteBtnText').textContent = t.pasted;
+                
+                setTimeout(() => {
+                    dom.btnPaste.classList.remove('btn-success');
+                    document.getElementById('pasteBtnText').textContent = t.paste;
+                }, 2000);
+            }
+        } catch (err) {
+            console.error('Failed to read clipboard text: ', err);
+            // Graceful fallback: just focus the input so user can ctrl+v
+            dom.inputText.focus();
+        }
+    });
+
     dom.btnClear.addEventListener('click', () => {
         dom.inputText.value = '';
         dom.outputText.value = '';
@@ -190,13 +228,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const t = i18n[currentLang];
             
             // Visual feedback
-            const originalHTML = dom.btnCopy.innerHTML;
             dom.btnCopy.classList.add('btn-success');
-            dom.btnCopy.innerHTML = `<svg class="icon"><polyline points="20 6 9 17 4 12"></polyline></svg> ${t.copied}`;
+            document.getElementById('copyBtnText').textContent = t.copied;
             
             setTimeout(() => {
                 dom.btnCopy.classList.remove('btn-success');
-                dom.btnCopy.innerHTML = originalHTML;
+                document.getElementById('copyBtnText').textContent = t.copy;
             }, 2000);
             
         } catch (err) {

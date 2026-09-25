@@ -1,9 +1,6 @@
 bower_components
-static/app.js
-static/app.min.js
-static/kn.js
-static/tests_kn.js
 elm-stuff
 knjs/dist
 src/app.js
 site
+node_modules/

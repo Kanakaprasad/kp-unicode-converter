@@ -1,226 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<title>Kannada Unicode Converter | KPWorks</title>
-
-<link rel="icon" href="static/fav.png">
-
-<!-- Required by Sanka -->
-<script src="static/kn.js"></script>
-<script src="static/app.min.js"></script>
-
-<style>
-:root{
-  --primary:#ff6a00;
-  --bg:#f4f6f9;
-  --card:#ffffff;
-  --text:#111;
-  --border:#ddd;
-}
-
-.dark{
-  --bg:#0f1115;
-  --card:#1b1f27;
-  --text:#f1f1f1;
-  --border:#2a2e36;
-}
-
-*{box-sizing:border-box}
-
-html,body{
-  margin:0;
-  height:100%;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-  background:var(--bg);
-  color:var(--text);
-}
-
-/* Header */
-header{
-  height:55px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:0 18px;
-  border-bottom:1px solid var(--border);
-}
-
-.brand span{ color:var(--primary); }
-
-main{
-  height:calc(100% - 55px);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  padding:12px;
-}
-
-.card{
-  width:100%;
-  max-width:1100px;
-  height:100%;
-  max-height:650px;
-  background:var(--card);
-  border-radius:14px;
-  border:1px solid var(--border);
-  padding:18px;
-  display:flex;
-  flex-direction:column;
-}
-
-.mode-row{
-  display:flex;
-  gap:20px;
-  margin-bottom:12px;
-}
-
-.textareas{
-  flex:1;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
-
-textarea{
-  width:100%;
-  height:100%;
-  resize:none;
-  border-radius:10px;
-  border:1px solid var(--border);
-  background:transparent;
-  color:var(--text);
-  padding:14px;
-  font-size:14px;
-}
-
-textarea:focus{
-  outline:none;
-  border-color:var(--primary);
-}
-
-.actions{
-  display:flex;
-  justify-content:flex-end;
-  gap:10px;
-  margin-top:12px;
-}
-
-button{
-  padding:8px 14px;
-  border:none;
-  border-radius:8px;
-  cursor:pointer;
-}
-
-.primary{
-  background:var(--primary);
-  color:white;
-}
-
-.secondary{
-  background:var(--border);
-  color:var(--text);
-}
-
-footer{
-  font-size:11px;
-  text-align:center;
-  padding:6px;
-  color:#777;
-}
-
-@media(max-width:900px){
-  .textareas{
-    grid-template-columns:1fr;
-  }
-}
-</style>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KPWorks Kannada ASCII to Unicode Converter</title>
+    <meta name="description" content="Free Kannada ASCII, Nudi and Baraha to Unicode converter and Unicode to ASCII converter."/>
+    
+    <link href="static/fav.png" rel="icon" type="image/png" />
+    <link rel="apple-touch-icon" href="static/fav.png" />
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="static/styles.css" />
+    
+    <!-- Original Conversion Engine -->
+    <script src="static/kn.js"></script>
+    <!-- New UI and Wrapper -->
+    <script src="static/converter.js"></script>
+    <script src="static/ui.js"></script>
 </head>
-
 <body>
+    <header class="app-header">
+        <div class="brand">
+            <img src="static/logo.png" alt="KPWorks Logo" class="brand-logo" />
+            <div class="brand-title">KPWorks Converter<span class="brand-subtitle">Kannada ASCII ↔ Unicode</span></div>
+        </div>
+        <div class="header-controls">
+            <select id="langSelect" class="control-select" aria-label="Language">
+                <option value="en">English</option>
+                <option value="kn">ಕನ್ನಡ</option>
+            </select>
+            <select id="themeSelect" class="control-select" aria-label="Theme">
+                <option value="system">System</option>
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+            </select>
+        </div>
+    </header>
 
-<header>
-  <div class="brand">KP<span>Works</span> Converter</div>
-  <button onclick="toggleTheme()">🌗</button>
-</header>
+    <main class="main-content">
+        <div class="mode-switcher">
+            <div class="segment-control" role="group" aria-label="Conversion Mode">
+                <button id="btnA2U" class="segment-btn active">ASCII → Unicode</button>
+                <button id="btnU2A" class="segment-btn">Unicode → ASCII</button>
+            </div>
+        </div>
 
-<main>
-  <div class="card">
+        <div class="workspace">
+            <!-- Input Panel -->
+            <div class="panel input-panel">
+                <div class="panel-header">
+                    <span id="inputPanelTitle" class="panel-title">Input</span>
+                    <span id="inputStats" class="panel-stats">0 characters · 0 words</span>
+                </div>
+                <div class="panel-body">
+                    <textarea id="inputText" class="editor-textarea" placeholder="Type or paste your text here..." aria-label="Input Text"></textarea>
+                </div>
+                <div class="panel-actions">
+                    <button id="btnClear" class="btn btn-secondary">
+                        <svg class="icon"><path d="M18 6L6 18M6 6l12 12"></path></svg> Clear
+                    </button>
+                </div>
+            </div>
 
-    <div class="mode-row">
-      <label><input type="radio" name="mode" value="a2u" checked> ASCII → Unicode</label>
-      <label><input type="radio" name="mode" value="u2a"> Unicode → ASCII</label>
-    </div>
+            <!-- Output Panel -->
+            <div class="panel output-panel">
+                <div class="panel-header">
+                    <span id="outputPanelTitle" class="panel-title">Output</span>
+                    <span id="outputStats" class="panel-stats">0 characters · 0 words</span>
+                </div>
+                <div class="panel-body">
+                    <textarea id="outputText" class="editor-textarea" placeholder="Converted text will appear here" readonly aria-label="Converted Text"></textarea>
+                </div>
+                <div class="panel-actions">
+                    <button id="btnCopy" class="btn btn-primary">
+                        <svg class="icon"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> Copy
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
 
-    <div class="textareas">
-      <textarea id="inputText" placeholder="Paste text here..."></textarea>
-      <textarea id="outputText" placeholder="Converted output will appear here..." readonly></textarea>
-    </div>
-
-    <div class="actions">
-      <button class="secondary" onclick="clearText()">Clear</button>
-      <button class="primary" onclick="copyOutput()">Copy</button>
-    </div>
-
-  </div>
-</main>
-
-<footer>
-  Open-source core based on Sanka (GPL v3)
-</footer>
-
-<!-- Hidden Elm Mount (DO NOT REMOVE) -->
-<div id="elmapp" style="display:none;"></div>
-
-<script>
-
-/* Proper Elm Initialization */
-var app = Elm.Converter.init({
-  node: document.getElementById("elmapp")
-});
-
-/* Listen for converted result */
-app.ports.converted_text.subscribe(function(text){
-  document.getElementById("outputText").value = text;
-});
-
-/* Live conversion */
-function convertText(){
-  const input = document.getElementById("inputText").value;
-  const mode = document.querySelector('input[name="mode"]:checked').value;
-
-  app.ports.convert.send({
-    input: input,
-    a2u: mode === "a2u",
-    englishNumbers: false,
-    removeExtraSpaces: false
-  });
-}
-
-document.getElementById("inputText").addEventListener("input", convertText);
-document.querySelectorAll('input[name="mode"]').forEach(r=>{
-  r.addEventListener("change", convertText);
-});
-
-function clearText(){
-  document.getElementById("inputText").value="";
-  document.getElementById("outputText").value="";
-}
-
-function copyOutput(){
-  const output=document.getElementById("outputText");
-  output.select();
-  document.execCommand("copy");
-}
-
-function toggleTheme(){
-  document.body.classList.toggle("dark");
-}
-
-</script>
-
+    <footer class="app-footer">
+        Open-source core based on <a href="https://aravindavk.in/sanka/" target="_blank" rel="noopener">Sanka</a> by Aravind VK (GPL v3)
+    </footer>
 </body>
 </html>

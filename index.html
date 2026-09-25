@@ -29,15 +29,30 @@
             <div class="brand-title">Sanka Studio<span class="brand-subtitle">Kannada ASCII ↔ Unicode Converter</span></div>
         </div>
         <div class="header-controls">
-            <select id="langSelect" class="control-select" aria-label="Language">
-                <option value="en">English</option>
-                <option value="kn">ಕನ್ನಡ</option>
-            </select>
-            <select id="themeSelect" class="control-select" aria-label="Theme">
-                <option value="light">Light</option>
-                <option value="dark">Dark</option>
-                <option value="system">System</option>
-            </select>
+            <!-- Custom Language Dropdown -->
+            <div class="custom-select-wrapper" id="langSelectWrapper">
+                <button type="button" class="custom-select-btn" aria-haspopup="listbox" aria-expanded="false" id="langSelectBtn">
+                    <span class="custom-select-val" id="langSelectVal">English</span>
+                    <svg class="icon chevron" width="16" height="16" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </button>
+                <ul class="custom-select-list" role="listbox" tabindex="-1" id="langSelectList">
+                    <li class="custom-select-option selected" role="option" aria-selected="true" data-value="en">English</li>
+                    <li class="custom-select-option" role="option" aria-selected="false" data-value="kn">ಕನ್ನಡ</li>
+                </ul>
+            </div>
+            
+            <!-- Custom Theme Dropdown -->
+            <div class="custom-select-wrapper" id="themeSelectWrapper">
+                <button type="button" class="custom-select-btn" aria-haspopup="listbox" aria-expanded="false" id="themeSelectBtn">
+                    <span class="custom-select-val" id="themeSelectVal">☀ Light</span>
+                    <svg class="icon chevron" width="16" height="16" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </button>
+                <ul class="custom-select-list" role="listbox" tabindex="-1" id="themeSelectList">
+                    <li class="custom-select-option" role="option" aria-selected="false" data-value="light">☀ Light</li>
+                    <li class="custom-select-option" role="option" aria-selected="false" data-value="dark">◐ Dark</li>
+                    <li class="custom-select-option" role="option" aria-selected="false" data-value="system">🖥 System</li>
+                </ul>
+            </div>
         </div>
     </header>
 

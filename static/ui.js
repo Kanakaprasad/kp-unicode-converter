@@ -44,9 +44,9 @@ document.addEventListener('DOMContentLoaded', () => {
             copied: "Copied ✓",
             chars: "characters",
             words: "words",
-            themeLight: "☀ Light",
-            themeDark: "◐ Dark",
-            themeSystem: "🖥 System",
+            themeLight: "Light",
+            themeDark: "Dark",
+            themeSystem: "System",
             langEn: "English",
             langKn: "ಕನ್ನಡ"
         },
@@ -67,9 +67,9 @@ document.addEventListener('DOMContentLoaded', () => {
             copied: "ನಕಲಿಸಲಾಗಿದೆ ✓",
             chars: "ಅಕ್ಷರಗಳು",
             words: "ಪದಗಳು",
-            themeLight: "☀ ಲೈಟ್",
-            themeDark: "◐ ಡಾರ್ಕ್",
-            themeSystem: "🖥 ಸಿಸ್ಟಮ್",
+            themeLight: "ಬೆಳಕು",
+            themeDark: "ಕತ್ತಲೆ",
+            themeSystem: "ಸಿಸ್ಟಮ್",
             langEn: "English",
             langKn: "ಕನ್ನಡ"
         }
